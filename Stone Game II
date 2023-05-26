@@ -1,0 +1,42 @@
+/*
+Link : https://leetcode.com/problems/stone-game-ii/
+
+This problem says that both plays optimally
+so both the players want to maximize their score , it means maximizing the difference of their score from the other participant
+
+Recursion can be used : TLE
+memoization willl help
+*/
+
+class Solution {
+    Integer dp[][];
+    int find(int ind,int piles[],int maxm)
+    {
+         if(ind>=piles.length)
+            return 0;
+        if(dp[ind][maxm]!=null)
+            return dp[ind][maxm];
+        int ans=Integer.MIN_VALUE,tot=0;
+        for(int i=0;i<2*maxm && (i+ind)<piles.length;i++)
+        {
+            tot+=piles[ind+i];
+            ans = Math.max(ans,tot-find(ind+i+1,piles,Math.max(maxm,i+1))); //maximizing the difference 
+        }
+        return dp[ind][maxm]=ans;
+    }
+    public int stoneGameII(int[] piles) {
+        dp = new Integer[piles.length][2*piles.length + 1];
+        int sum=0;
+        for(int el:piles)
+            sum+=el;
+        
+        int diff = find(0,piles,1);
+        return (sum+diff)/2;
+        //why sum+diff/2?
+        //-> Let Alice score = x, then bob's score = x-diff [ diff is the difference of alice score from bob's score]
+        // x+ x-diff = sum
+        //x = (sum=diff)/2 -> alice score
+        
+
+    }
+}
